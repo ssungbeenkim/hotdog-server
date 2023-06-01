@@ -9,6 +9,42 @@ let scores = [
     score: '4',
     time: '3',
   },
+  {
+    name: 'user2',
+    level: '4',
+    score: '4',
+    time: '4',
+  },
+  {
+    name: 'user3',
+    level: '4',
+    score: '3',
+    time: '3',
+  },
+  {
+    name: 'user4',
+    level: '4',
+    score: '3',
+    time: '4',
+  },
+  {
+    name: 'user5',
+    level: '1',
+    score: '1',
+    time: '1',
+  },
+  {
+    name: 'user6',
+    level: '1',
+    score: '1',
+    time: '1',
+  },
+  {
+    name: 'user6',
+    level: '1',
+    score: '1',
+    time: '1',
+  },
 ];
 
 // GET /scores
