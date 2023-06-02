@@ -23,6 +23,6 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
-db.getConnection().then(console.log);
+db.getConnection() /* .then(console.log) */;
 
 app.listen(8080);
