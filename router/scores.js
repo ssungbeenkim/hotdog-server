@@ -1,21 +1,51 @@
 import express from 'express';
 import 'express-async-errors';
-import { db } from '../db/database.js';
+import { sequelize } from '../db/database.js';
+import SQ from 'sequelize';
+
+const DataTypes = SQ.DataTypes;
+
+const Score = sequelize.define(
+  'score',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    level: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    time: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  { timestamps: false }
+);
 
 const router = express.Router();
 
 // GET /scores
 router.get('/', async (req, res, next) => {
-  const data = await db
-    .execute(
-      'SELECT sc.name, sc.level, sc.score, sc.time FROM scores as sc ORDER BY sc.level DESC, sc.score DESC, sc.time ASC LIMIT 10'
-    )
-    .then((result) => {
-      return result[0];
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  const data = await Score.findAll({
+    order: [
+      ['level', 'DESC'],
+      ['score', 'DESC'],
+      ['time', 'ASC'],
+    ],
+    limit: 10,
+  });
   res.status(200).json(data);
 });
 
@@ -23,24 +53,21 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const { name, level, score, time } = req.body;
 
-  const newScore = await db
-    .execute('INSERT INTO scores (name, level, score, time) VALUES (?,?,?,?)', [
-      name,
-      level,
-      score,
-      time,
-    ])
-    .then(() => {
-      return db.execute(
-        'SELECT * FROM scores ORDER BY level DESC, score DESC, time ASC'
-      );
-    })
-    .then((results) => {
-      return results[0];
-    })
-    .catch((error) => {
-      console.error(error);
+  const newScore = await Score.create({
+    name,
+    level,
+    score,
+    time,
+  }).then(() => {
+    return Score.findAll({
+      order: [
+        ['level', 'DESC'],
+        ['score', 'DESC'],
+        ['time', 'ASC'],
+      ],
+      limit: 10,
     });
+  });
 
   res.status(201).json(newScore);
 });

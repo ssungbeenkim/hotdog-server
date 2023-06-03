@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import scoresRouter from './router/scores.js';
-import { db } from './db/database.js';
+import { sequelize } from './db/database.js';
 
 const app = express();
 app.use(express.json());
@@ -23,6 +23,7 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
-db.getConnection() /* .then(console.log) */;
-
-app.listen(8080);
+sequelize.sync().then((client) => {
+  // console.log(client);
+  app.listen(8080);
+});
