@@ -6,10 +6,15 @@ import helmet from 'helmet';
 import scoresRouter from './router/scores.js';
 import { sequelize } from './db/database.js';
 
+const corsOption = {
+  origin: process.env.CORS_ALLOW_ORIGIN,
+  optionsSuccessStatus: 200,
+};
+
 const app = express();
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOption));
 app.use(morgan('tiny'));
 
 app.use('/scores', scoresRouter);
@@ -24,6 +29,6 @@ app.use((error, req, res, next) => {
 });
 
 sequelize.sync().then((client) => {
-  // console.log(client);
-  app.listen(8080);
+  console.log(`Server is started...${new Date()}`);
+  app.listen(process.env.PORT);
 });
